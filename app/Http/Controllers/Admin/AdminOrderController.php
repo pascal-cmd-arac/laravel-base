@@ -19,11 +19,11 @@ class AdminOrderController extends Controller
 
         if ($request->search) {
             $query->where(function ($q) use ($request) {
-                $q->where('order_number', 'like', '%' . $request->search . '%')
-                  ->orWhereHas('user', function ($userQuery) use ($request) {
-                      $userQuery->where('name', 'like', '%' . $request->search . '%')
-                               ->orWhere('email', 'like', '%' . $request->search . '%');
-                  });
+                $q->where('order_number', 'like', '%'.$request->search.'%')
+                    ->orWhereHas('user', function ($userQuery) use ($request) {
+                        $userQuery->where('name', 'like', '%'.$request->search.'%')
+                            ->orWhere('email', 'like', '%'.$request->search.'%');
+                    });
             });
         }
 
@@ -31,7 +31,7 @@ class AdminOrderController extends Controller
 
         return Inertia::render('Admin/Orders/Index', [
             'orders' => $orders,
-            'filters' => $request->only(['status', 'search'])
+            'filters' => $request->only(['status', 'search']),
         ]);
     }
 
@@ -53,11 +53,11 @@ class AdminOrderController extends Controller
 
         $order->update($request->only(['status', 'payment_status']));
 
-        if ($request->status === 'shipped' && !$order->shipped_at) {
+        if ($request->status === 'shipped' && ! $order->shipped_at) {
             $order->update(['shipped_at' => now()]);
         }
 
-        if ($request->status === 'delivered' && !$order->delivered_at) {
+        if ($request->status === 'delivered' && ! $order->delivered_at) {
             $order->update(['delivered_at' => now()]);
         }
 

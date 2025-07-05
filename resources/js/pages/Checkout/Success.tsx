@@ -1,10 +1,10 @@
-import { Head, Link } from '@inertiajs/react';
-import AppLayout from '@/layouts/app-layout';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
-import { CheckCircle, Package, MapPin, CreditCard } from 'lucide-react';
+import AppLayout from '@/layouts/app-layout';
+import { Head, Link } from '@inertiajs/react';
+import { CheckCircle, MapPin, Package } from 'lucide-react';
 
 interface OrderItem {
     id: number;
@@ -62,45 +62,35 @@ export default function CheckoutSuccess({ order }: Props) {
     return (
         <AppLayout>
             <Head title="Order Confirmation" />
-            
+
             <div className="container mx-auto px-4 py-8">
                 {/* Success Header */}
-                <div className="text-center mb-8">
-                    <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-4" />
-                    <h1 className="text-3xl font-bold text-green-600 mb-2">Order Confirmed!</h1>
-                    <p className="text-gray-600">
-                        Thank you for your order. We'll send you a confirmation email shortly.
-                    </p>
+                <div className="mb-8 text-center">
+                    <CheckCircle className="mx-auto mb-4 h-16 w-16 text-green-500" />
+                    <h1 className="mb-2 text-3xl font-bold text-green-600">Order Confirmed!</h1>
+                    <p className="text-gray-600">Thank you for your order. We'll send you a confirmation email shortly.</p>
                 </div>
 
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
                     {/* Order Details */}
-                    <div className="lg:col-span-2 space-y-6">
+                    <div className="space-y-6 lg:col-span-2">
                         {/* Order Info */}
                         <Card>
                             <CardHeader>
                                 <CardTitle className="flex items-center justify-between">
                                     <span className="flex items-center">
-                                        <Package className="w-5 h-5 mr-2" />
+                                        <Package className="mr-2 h-5 w-5" />
                                         Order #{order.order_number}
                                     </span>
                                     <div className="flex space-x-2">
-                                        <Badge className="bg-green-100 text-green-800">
-                                            {order.status}
-                                        </Badge>
-                                        <Badge variant="secondary">
-                                            {order.payment_status}
-                                        </Badge>
+                                        <Badge className="bg-green-100 text-green-800">{order.status}</Badge>
+                                        <Badge variant="secondary">{order.payment_status}</Badge>
                                     </div>
                                 </CardTitle>
                             </CardHeader>
                             <CardContent>
-                                <p className="text-sm text-gray-600">
-                                    Order placed on {new Date(order.created_at).toLocaleDateString()}
-                                </p>
-                                <p className="text-sm text-gray-600">
-                                    Payment method: {order.payment_method.replace('_', ' ').toUpperCase()}
-                                </p>
+                                <p className="text-sm text-gray-600">Order placed on {new Date(order.created_at).toLocaleDateString()}</p>
+                                <p className="text-sm text-gray-600">Payment method: {order.payment_method.replace('_', ' ').toUpperCase()}</p>
                             </CardContent>
                         </Card>
 
@@ -112,11 +102,11 @@ export default function CheckoutSuccess({ order }: Props) {
                             <CardContent>
                                 <div className="space-y-4">
                                     {order.items.map((item) => (
-                                        <div key={item.id} className="flex items-center space-x-4 p-4 border rounded-lg">
+                                        <div key={item.id} className="flex items-center space-x-4 rounded-lg border p-4">
                                             <img
                                                 src={item.product.images?.[0] || '/placeholder-product.jpg'}
                                                 alt={item.product_name}
-                                                className="w-16 h-16 object-cover rounded"
+                                                className="h-16 w-16 rounded object-cover"
                                             />
                                             <div className="flex-1">
                                                 <h3 className="font-medium">{item.product_name}</h3>
@@ -134,21 +124,21 @@ export default function CheckoutSuccess({ order }: Props) {
                         </Card>
 
                         {/* Addresses */}
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                             <Card>
                                 <CardHeader>
                                     <CardTitle className="flex items-center">
-                                        <MapPin className="w-5 h-5 mr-2" />
+                                        <MapPin className="mr-2 h-5 w-5" />
                                         Billing Address
                                     </CardTitle>
                                 </CardHeader>
                                 <CardContent>
                                     <div className="text-sm">
-                                        <p>{order.billing_address.first_name} {order.billing_address.last_name}</p>
+                                        <p>
+                                            {order.billing_address.first_name} {order.billing_address.last_name}
+                                        </p>
                                         <p>{order.billing_address.address_line_1}</p>
-                                        {order.billing_address.address_line_2 && (
-                                            <p>{order.billing_address.address_line_2}</p>
-                                        )}
+                                        {order.billing_address.address_line_2 && <p>{order.billing_address.address_line_2}</p>}
                                         <p>
                                             {order.billing_address.city}, {order.billing_address.state} {order.billing_address.postal_code}
                                         </p>
@@ -160,17 +150,17 @@ export default function CheckoutSuccess({ order }: Props) {
                             <Card>
                                 <CardHeader>
                                     <CardTitle className="flex items-center">
-                                        <Package className="w-5 h-5 mr-2" />
+                                        <Package className="mr-2 h-5 w-5" />
                                         Shipping Address
                                     </CardTitle>
                                 </CardHeader>
                                 <CardContent>
                                     <div className="text-sm">
-                                        <p>{order.shipping_address.first_name} {order.shipping_address.last_name}</p>
+                                        <p>
+                                            {order.shipping_address.first_name} {order.shipping_address.last_name}
+                                        </p>
                                         <p>{order.shipping_address.address_line_1}</p>
-                                        {order.shipping_address.address_line_2 && (
-                                            <p>{order.shipping_address.address_line_2}</p>
-                                        )}
+                                        {order.shipping_address.address_line_2 && <p>{order.shipping_address.address_line_2}</p>}
                                         <p>
                                             {order.shipping_address.city}, {order.shipping_address.state} {order.shipping_address.postal_code}
                                         </p>
@@ -216,11 +206,9 @@ export default function CheckoutSuccess({ order }: Props) {
 
                                 <div className="space-y-3 pt-4">
                                     <Link href="/dashboard">
-                                        <Button className="w-full">
-                                            View Order History
-                                        </Button>
+                                        <Button className="w-full">View Order History</Button>
                                     </Link>
-                                    
+
                                     <Link href="/products">
                                         <Button variant="outline" className="w-full">
                                             Continue Shopping

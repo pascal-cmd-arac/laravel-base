@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Product;
-use App\Models\Category;
 use App\Models\Brand;
+use App\Models\Category;
+use App\Models\Product;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -17,8 +17,8 @@ class ProductController extends Controller
 
         // Search
         if ($request->search) {
-            $query->where('name', 'like', '%' . $request->search . '%')
-                  ->orWhere('description', 'like', '%' . $request->search . '%');
+            $query->where('name', 'like', '%'.$request->search.'%')
+                ->orWhere('description', 'like', '%'.$request->search.'%');
         }
 
         // Category filter
@@ -52,7 +52,7 @@ class ProductController extends Controller
             'products' => $products,
             'categories' => $categories,
             'brands' => $brands,
-            'filters' => $request->only(['search', 'category', 'brand', 'min_price', 'max_price', 'sort', 'order'])
+            'filters' => $request->only(['search', 'category', 'brand', 'min_price', 'max_price', 'sort', 'order']),
         ]);
     }
 

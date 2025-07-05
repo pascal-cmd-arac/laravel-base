@@ -3,12 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Cart;
-use App\Models\Order;
-use App\Models\Address;
 use App\Models\Coupon;
+use App\Models\Order;
 use Illuminate\Http\Request;
-use Inertia\Inertia;
 use Illuminate\Support\Facades\DB;
+use Inertia\Inertia;
 
 class CheckoutController extends Controller
 {
@@ -16,7 +15,7 @@ class CheckoutController extends Controller
     {
         $cart = $this->getCart();
 
-        if (!$cart || $cart->items->isEmpty()) {
+        if (! $cart || $cart->items->isEmpty()) {
             return redirect()->route('cart.index')->with('error', 'Your cart is empty!');
         }
 
@@ -40,7 +39,7 @@ class CheckoutController extends Controller
 
         $cart = $this->getCart();
 
-        if (!$cart || $cart->items->isEmpty()) {
+        if (! $cart || $cart->items->isEmpty()) {
             return back()->with('error', 'Your cart is empty!');
         }
 
@@ -99,6 +98,7 @@ class CheckoutController extends Controller
 
         } catch (\Exception $e) {
             DB::rollback();
+
             return back()->with('error', 'Something went wrong. Please try again.');
         }
     }
@@ -119,6 +119,7 @@ class CheckoutController extends Controller
         if (auth()->check()) {
             return Cart::where('user_id', auth()->id())->with(['items.product'])->first();
         }
+
         return null;
     }
 }

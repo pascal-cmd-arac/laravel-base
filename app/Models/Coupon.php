@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class Coupon extends Model
 {
@@ -34,17 +34,17 @@ class Coupon extends Model
     public function scopeActive($query)
     {
         return $query->where('is_active', true)
-                    ->where(function ($q) {
-                        $q->whereNull('starts_at')->orWhere('starts_at', '<=', now());
-                    })
-                    ->where(function ($q) {
-                        $q->whereNull('expires_at')->orWhere('expires_at', '>=', now());
-                    });
+            ->where(function ($q) {
+                $q->whereNull('starts_at')->orWhere('starts_at', '<=', now());
+            })
+            ->where(function ($q) {
+                $q->whereNull('expires_at')->orWhere('expires_at', '>=', now());
+            });
     }
 
     public function isValid($orderTotal = 0)
     {
-        if (!$this->is_active) {
+        if (! $this->is_active) {
             return false;
         }
 
@@ -69,7 +69,7 @@ class Coupon extends Model
 
     public function calculateDiscount($orderTotal)
     {
-        if (!$this->isValid($orderTotal)) {
+        if (! $this->isValid($orderTotal)) {
             return 0;
         }
 

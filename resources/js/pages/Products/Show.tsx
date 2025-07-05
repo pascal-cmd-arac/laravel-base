@@ -1,11 +1,10 @@
-import { Head, router } from '@inertiajs/react';
-import AppLayout from '@/layouts/app-layout';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
-import { Separator } from '@/components/ui/separator';
-import { ShoppingCart, Heart, Star, Plus, Minus } from 'lucide-react';
+import AppLayout from '@/layouts/app-layout';
+import { Head, router } from '@inertiajs/react';
+import { Heart, Minus, Plus, ShoppingCart, Star } from 'lucide-react';
 import { useState } from 'react';
 
 interface Product {
@@ -26,17 +25,6 @@ interface Product {
     };
     stock_quantity: number;
     in_stock: boolean;
-}
-
-interface Review {
-    id: number;
-    rating: number;
-    title?: string;
-    comment?: string;
-    user: {
-        name: string;
-    };
-    created_at: string;
 }
 
 interface Props {
@@ -68,16 +56,16 @@ export default function ProductShow({ product, relatedProducts, averageRating, r
     return (
         <AppLayout>
             <Head title={product.name} />
-            
+
             <div className="container mx-auto px-4 py-8">
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
+                <div className="mb-12 grid grid-cols-1 gap-8 lg:grid-cols-2">
                     {/* Product Images */}
                     <div className="space-y-4">
                         <div className="aspect-square overflow-hidden rounded-lg border">
                             <img
                                 src={images[selectedImage] || '/placeholder-product.jpg'}
                                 alt={product.name}
-                                className="w-full h-full object-cover"
+                                className="h-full w-full object-cover"
                             />
                         </div>
                         {images.length > 1 && (
@@ -90,11 +78,7 @@ export default function ProductShow({ product, relatedProducts, averageRating, r
                                             selectedImage === index ? 'border-blue-500' : 'border-gray-200'
                                         }`}
                                     >
-                                        <img
-                                            src={image}
-                                            alt={`${product.name} ${index + 1}`}
-                                            className="w-full h-full object-cover"
-                                        />
+                                        <img src={image} alt={`${product.name} ${index + 1}`} className="h-full w-full object-cover" />
                                     </button>
                                 ))}
                             </div>
@@ -104,22 +88,16 @@ export default function ProductShow({ product, relatedProducts, averageRating, r
                     {/* Product Info */}
                     <div className="space-y-6">
                         <div>
-                            {product.brand && (
-                                <p className="text-sm text-gray-500 mb-2">{product.brand.name}</p>
-                            )}
-                            <h1 className="text-3xl font-bold mb-2">{product.name}</h1>
-                            
+                            {product.brand && <p className="mb-2 text-sm text-gray-500">{product.brand.name}</p>}
+                            <h1 className="mb-2 text-3xl font-bold">{product.name}</h1>
+
                             {/* Rating */}
-                            <div className="flex items-center space-x-2 mb-4">
+                            <div className="mb-4 flex items-center space-x-2">
                                 <div className="flex items-center">
                                     {[...Array(5)].map((_, i) => (
                                         <Star
                                             key={i}
-                                            className={`w-5 h-5 ${
-                                                i < Math.floor(averageRating)
-                                                    ? 'text-yellow-400 fill-current'
-                                                    : 'text-gray-300'
-                                            }`}
+                                            className={`h-5 w-5 ${i < Math.floor(averageRating) ? 'fill-current text-yellow-400' : 'text-gray-300'}`}
                                         />
                                     ))}
                                 </div>
@@ -129,24 +107,18 @@ export default function ProductShow({ product, relatedProducts, averageRating, r
                             </div>
 
                             {/* Price */}
-                            <div className="flex items-center space-x-3 mb-4">
+                            <div className="mb-4 flex items-center space-x-3">
                                 <span className="text-3xl font-bold">${product.price}</span>
                                 {product.compare_price && product.compare_price > product.price && (
                                     <>
-                                        <span className="text-xl text-gray-500 line-through">
-                                            ${product.compare_price}
-                                        </span>
-                                        <Badge variant="destructive">
-                                            Save ${(product.compare_price - product.price).toFixed(2)}
-                                        </Badge>
+                                        <span className="text-xl text-gray-500 line-through">${product.compare_price}</span>
+                                        <Badge variant="destructive">Save ${(product.compare_price - product.price).toFixed(2)}</Badge>
                                     </>
                                 )}
                             </div>
 
                             {/* Short Description */}
-                            {product.short_description && (
-                                <p className="text-gray-600 mb-6">{product.short_description}</p>
-                            )}
+                            {product.short_description && <p className="mb-6 text-gray-600">{product.short_description}</p>}
 
                             {/* Stock Status */}
                             <div className="mb-6">
@@ -155,9 +127,7 @@ export default function ProductShow({ product, relatedProducts, averageRating, r
                                         In Stock ({product.stock_quantity} available)
                                     </Badge>
                                 ) : (
-                                    <Badge variant="destructive">
-                                        Out of Stock
-                                    </Badge>
+                                    <Badge variant="destructive">Out of Stock</Badge>
                                 )}
                             </div>
 
@@ -166,20 +136,20 @@ export default function ProductShow({ product, relatedProducts, averageRating, r
                                 <div className="space-y-4">
                                     <div className="flex items-center space-x-4">
                                         <label className="font-medium">Quantity:</label>
-                                        <div className="flex items-center border rounded-lg">
+                                        <div className="flex items-center rounded-lg border">
                                             <Button
                                                 variant="ghost"
                                                 size="sm"
                                                 onClick={() => setQuantity(Math.max(1, quantity - 1))}
                                                 disabled={quantity <= 1}
                                             >
-                                                <Minus className="w-4 h-4" />
+                                                <Minus className="h-4 w-4" />
                                             </Button>
                                             <Input
                                                 type="number"
                                                 value={quantity}
                                                 onChange={(e) => setQuantity(Math.max(1, parseInt(e.target.value) || 1))}
-                                                className="w-16 text-center border-0"
+                                                className="w-16 border-0 text-center"
                                                 min="1"
                                                 max={product.stock_quantity}
                                             />
@@ -189,18 +159,18 @@ export default function ProductShow({ product, relatedProducts, averageRating, r
                                                 onClick={() => setQuantity(Math.min(product.stock_quantity, quantity + 1))}
                                                 disabled={quantity >= product.stock_quantity}
                                             >
-                                                <Plus className="w-4 h-4" />
+                                                <Plus className="h-4 w-4" />
                                             </Button>
                                         </div>
                                     </div>
 
                                     <div className="flex space-x-4">
                                         <Button onClick={addToCart} className="flex-1">
-                                            <ShoppingCart className="w-4 h-4 mr-2" />
+                                            <ShoppingCart className="mr-2 h-4 w-4" />
                                             Add to Cart
                                         </Button>
                                         <Button variant="outline" onClick={addToWishlist}>
-                                            <Heart className="w-4 h-4" />
+                                            <Heart className="h-4 w-4" />
                                         </Button>
                                     </div>
                                 </div>
@@ -216,10 +186,7 @@ export default function ProductShow({ product, relatedProducts, averageRating, r
                             <CardTitle>Description</CardTitle>
                         </CardHeader>
                         <CardContent>
-                            <div 
-                                className="prose max-w-none"
-                                dangerouslySetInnerHTML={{ __html: product.description }}
-                            />
+                            <div className="prose max-w-none" dangerouslySetInnerHTML={{ __html: product.description }} />
                         </CardContent>
                     </Card>
                 </div>
@@ -227,25 +194,22 @@ export default function ProductShow({ product, relatedProducts, averageRating, r
                 {/* Related Products */}
                 {relatedProducts.length > 0 && (
                     <div>
-                        <h2 className="text-2xl font-bold mb-6">Related Products</h2>
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                        <h2 className="mb-6 text-2xl font-bold">Related Products</h2>
+                        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
                             {relatedProducts.map((relatedProduct) => (
-                                <Card key={relatedProduct.id} className="group hover:shadow-lg transition-shadow">
+                                <Card key={relatedProduct.id} className="group transition-shadow hover:shadow-lg">
                                     <CardHeader className="p-0">
                                         <div className="relative overflow-hidden rounded-t-lg">
                                             <img
                                                 src={relatedProduct.images?.[0] || '/placeholder-product.jpg'}
                                                 alt={relatedProduct.name}
-                                                className="w-full h-48 object-cover group-hover:scale-105 transition-transform"
+                                                className="h-48 w-full object-cover transition-transform group-hover:scale-105"
                                             />
                                         </div>
                                     </CardHeader>
                                     <CardContent className="p-4">
-                                        <CardTitle className="text-lg mb-2">
-                                            <a
-                                                href={`/products/${relatedProduct.slug}`}
-                                                className="hover:text-blue-600"
-                                            >
+                                        <CardTitle className="mb-2 text-lg">
+                                            <a href={`/products/${relatedProduct.slug}`} className="hover:text-blue-600">
                                                 {relatedProduct.name}
                                             </a>
                                         </CardTitle>

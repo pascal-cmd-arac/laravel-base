@@ -1,11 +1,11 @@
-import { Head, router, useForm } from '@inertiajs/react';
-import AppLayout from '@/layouts/app-layout';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Separator } from '@/components/ui/separator';
+import AppLayout from '@/layouts/app-layout';
+import { Head, useForm } from '@inertiajs/react';
 import { CreditCard, MapPin, Package } from 'lucide-react';
 
 interface CartItem {
@@ -22,27 +22,13 @@ interface Cart {
     items: CartItem[];
 }
 
-interface Address {
-    id: number;
-    first_name: string;
-    last_name: string;
-    address_line_1: string;
-    address_line_2?: string;
-    city: string;
-    state: string;
-    postal_code: string;
-    country: string;
-    phone?: string;
-}
-
 interface Props {
     cart: Cart;
-    addresses: Address[];
     total: number;
 }
 
-export default function CheckoutIndex({ cart, addresses, total }: Props) {
-    const { data, setData, post, processing, errors } = useForm({
+export default function CheckoutIndex({ cart, total }: Props) {
+    const { data, setData, post, processing } = useForm({
         billing_address: {
             first_name: '',
             last_name: '',
@@ -72,36 +58,34 @@ export default function CheckoutIndex({ cart, addresses, total }: Props) {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        
-        const submitData = {
-            ...data,
-            shipping_address: data.same_as_billing ? data.billing_address : data.shipping_address,
-        };
-        
-        post('/checkout', submitData);
+
+        // Update the form data before submission
+        setData('shipping_address', data.same_as_billing ? data.billing_address : data.shipping_address);
+
+        post('/checkout');
     };
 
     const subtotal = total;
     const taxAmount = subtotal * 0.1;
-    const shippingAmount = 10.00;
+    const shippingAmount = 10.0;
     const finalTotal = subtotal + taxAmount + shippingAmount;
 
     return (
         <AppLayout>
             <Head title="Checkout" />
-            
+
             <div className="container mx-auto px-4 py-8">
-                <h1 className="text-3xl font-bold mb-8">Checkout</h1>
+                <h1 className="mb-8 text-3xl font-bold">Checkout</h1>
 
                 <form onSubmit={handleSubmit}>
-                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
                         {/* Checkout Form */}
-                        <div className="lg:col-span-2 space-y-6">
+                        <div className="space-y-6 lg:col-span-2">
                             {/* Billing Address */}
                             <Card>
                                 <CardHeader>
                                     <CardTitle className="flex items-center">
-                                        <MapPin className="w-5 h-5 mr-2" />
+                                        <MapPin className="mr-2 h-5 w-5" />
                                         Billing Address
                                     </CardTitle>
                                 </CardHeader>
@@ -112,10 +96,12 @@ export default function CheckoutIndex({ cart, addresses, total }: Props) {
                                             <Input
                                                 id="billing_first_name"
                                                 value={data.billing_address.first_name}
-                                                onChange={(e) => setData('billing_address', {
-                                                    ...data.billing_address,
-                                                    first_name: e.target.value
-                                                })}
+                                                onChange={(e) =>
+                                                    setData('billing_address', {
+                                                        ...data.billing_address,
+                                                        first_name: e.target.value,
+                                                    })
+                                                }
                                                 required
                                             />
                                         </div>
@@ -124,50 +110,58 @@ export default function CheckoutIndex({ cart, addresses, total }: Props) {
                                             <Input
                                                 id="billing_last_name"
                                                 value={data.billing_address.last_name}
-                                                onChange={(e) => setData('billing_address', {
-                                                    ...data.billing_address,
-                                                    last_name: e.target.value
-                                                })}
+                                                onChange={(e) =>
+                                                    setData('billing_address', {
+                                                        ...data.billing_address,
+                                                        last_name: e.target.value,
+                                                    })
+                                                }
                                                 required
                                             />
                                         </div>
                                     </div>
-                                    
+
                                     <div>
                                         <Label htmlFor="billing_address_1">Address Line 1</Label>
                                         <Input
                                             id="billing_address_1"
                                             value={data.billing_address.address_line_1}
-                                            onChange={(e) => setData('billing_address', {
-                                                ...data.billing_address,
-                                                address_line_1: e.target.value
-                                            })}
+                                            onChange={(e) =>
+                                                setData('billing_address', {
+                                                    ...data.billing_address,
+                                                    address_line_1: e.target.value,
+                                                })
+                                            }
                                             required
                                         />
                                     </div>
-                                    
+
                                     <div>
                                         <Label htmlFor="billing_address_2">Address Line 2 (Optional)</Label>
                                         <Input
                                             id="billing_address_2"
                                             value={data.billing_address.address_line_2}
-                                            onChange={(e) => setData('billing_address', {
-                                                ...data.billing_address,
-                                                address_line_2: e.target.value
-                                            })}
+                                            onChange={(e) =>
+                                                setData('billing_address', {
+                                                    ...data.billing_address,
+                                                    address_line_2: e.target.value,
+                                                })
+                                            }
                                         />
                                     </div>
-                                    
+
                                     <div className="grid grid-cols-3 gap-4">
                                         <div>
                                             <Label htmlFor="billing_city">City</Label>
                                             <Input
                                                 id="billing_city"
                                                 value={data.billing_address.city}
-                                                onChange={(e) => setData('billing_address', {
-                                                    ...data.billing_address,
-                                                    city: e.target.value
-                                                })}
+                                                onChange={(e) =>
+                                                    setData('billing_address', {
+                                                        ...data.billing_address,
+                                                        city: e.target.value,
+                                                    })
+                                                }
                                                 required
                                             />
                                         </div>
@@ -176,10 +170,12 @@ export default function CheckoutIndex({ cart, addresses, total }: Props) {
                                             <Input
                                                 id="billing_state"
                                                 value={data.billing_address.state}
-                                                onChange={(e) => setData('billing_address', {
-                                                    ...data.billing_address,
-                                                    state: e.target.value
-                                                })}
+                                                onChange={(e) =>
+                                                    setData('billing_address', {
+                                                        ...data.billing_address,
+                                                        state: e.target.value,
+                                                    })
+                                                }
                                                 required
                                             />
                                         </div>
@@ -188,25 +184,29 @@ export default function CheckoutIndex({ cart, addresses, total }: Props) {
                                             <Input
                                                 id="billing_postal_code"
                                                 value={data.billing_address.postal_code}
-                                                onChange={(e) => setData('billing_address', {
-                                                    ...data.billing_address,
-                                                    postal_code: e.target.value
-                                                })}
+                                                onChange={(e) =>
+                                                    setData('billing_address', {
+                                                        ...data.billing_address,
+                                                        postal_code: e.target.value,
+                                                    })
+                                                }
                                                 required
                                             />
                                         </div>
                                     </div>
-                                    
+
                                     <div>
                                         <Label htmlFor="billing_phone">Phone</Label>
                                         <Input
                                             id="billing_phone"
                                             type="tel"
                                             value={data.billing_address.phone}
-                                            onChange={(e) => setData('billing_address', {
-                                                ...data.billing_address,
-                                                phone: e.target.value
-                                            })}
+                                            onChange={(e) =>
+                                                setData('billing_address', {
+                                                    ...data.billing_address,
+                                                    phone: e.target.value,
+                                                })
+                                            }
                                         />
                                     </div>
                                 </CardContent>
@@ -216,7 +216,7 @@ export default function CheckoutIndex({ cart, addresses, total }: Props) {
                             <Card>
                                 <CardHeader>
                                     <CardTitle className="flex items-center">
-                                        <CreditCard className="w-5 h-5 mr-2" />
+                                        <CreditCard className="mr-2 h-5 w-5" />
                                         Payment Method
                                     </CardTitle>
                                 </CardHeader>
@@ -240,7 +240,7 @@ export default function CheckoutIndex({ cart, addresses, total }: Props) {
                             <Card className="sticky top-4">
                                 <CardHeader>
                                     <CardTitle className="flex items-center">
-                                        <Package className="w-5 h-5 mr-2" />
+                                        <Package className="mr-2 h-5 w-5" />
                                         Order Summary
                                     </CardTitle>
                                 </CardHeader>
@@ -252,19 +252,13 @@ export default function CheckoutIndex({ cart, addresses, total }: Props) {
                                                 <img
                                                     src={item.product.images?.[0] || '/placeholder-product.jpg'}
                                                     alt={item.product.name}
-                                                    className="w-12 h-12 object-cover rounded"
+                                                    className="h-12 w-12 rounded object-cover"
                                                 />
-                                                <div className="flex-1 min-w-0">
-                                                    <p className="text-sm font-medium truncate">
-                                                        {item.product.name}
-                                                    </p>
-                                                    <p className="text-sm text-gray-500">
-                                                        Qty: {item.quantity}
-                                                    </p>
+                                                <div className="min-w-0 flex-1">
+                                                    <p className="truncate text-sm font-medium">{item.product.name}</p>
+                                                    <p className="text-sm text-gray-500">Qty: {item.quantity}</p>
                                                 </div>
-                                                <p className="text-sm font-medium">
-                                                    ${(item.price * item.quantity).toFixed(2)}
-                                                </p>
+                                                <p className="text-sm font-medium">${(item.price * item.quantity).toFixed(2)}</p>
                                             </div>
                                         ))}
                                     </div>
@@ -292,12 +286,7 @@ export default function CheckoutIndex({ cart, addresses, total }: Props) {
                                         </div>
                                     </div>
 
-                                    <Button 
-                                        type="submit" 
-                                        className="w-full" 
-                                        size="lg"
-                                        disabled={processing}
-                                    >
+                                    <Button type="submit" className="w-full" size="lg" disabled={processing}>
                                         {processing ? 'Processing...' : 'Place Order'}
                                     </Button>
                                 </CardContent>

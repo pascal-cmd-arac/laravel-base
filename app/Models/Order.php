@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class Order extends Model
 {
@@ -65,8 +65,8 @@ class Order extends Model
         parent::boot();
 
         static::creating(function ($order) {
-            if (!$order->order_number) {
-                $order->order_number = 'ORD-' . strtoupper(uniqid());
+            if (! $order->order_number) {
+                $order->order_number = 'ORD-'.strtoupper(uniqid());
             }
         });
     }

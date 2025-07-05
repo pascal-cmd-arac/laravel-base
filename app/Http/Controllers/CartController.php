@@ -65,6 +65,7 @@ class CartController extends Controller
     public function remove(CartItem $cartItem)
     {
         $cartItem->delete();
+
         return back()->with('success', 'Item removed from cart!');
     }
 
@@ -72,6 +73,7 @@ class CartController extends Controller
     {
         $cart = $this->getOrCreateCart();
         $cart->items()->delete();
+
         return back()->with('success', 'Cart cleared!');
     }
 
@@ -82,6 +84,7 @@ class CartController extends Controller
         }
 
         $sessionId = session()->getId();
+
         return Cart::firstOrCreate(['session_id' => $sessionId]);
     }
 }
